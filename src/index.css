@@ -1,10 +1,21 @@
 body {
   margin: 0;
+  padding: 0;
+  background-color: #0a0a0e;
+  color: #f2f2f2;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --ss-pink: #ff2e6b;
+  --ss-cyan: #00e5ff;
+  --ss-ink: #0a0a0e;
+  --ss-charcoal: #15151c;
+  --ss-text: #f2f2f2;
 }
 
 code {

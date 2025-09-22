@@ -1,24 +1,81 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { createContext, useContext, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 
+import Nav from "./nav";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Login from "./pages/login";
+import ErrorPage from "./pages/error";
+import Characters from "./pages/characters";
+
+// ------------------ Auth Context ------------------ //
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const login = (username) => {
+    setUser(username);
+    setIsLoggedIn(true);
+  };
+
+  const logout = () => {
+    setUser(null);
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, isLoggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Layout that includes the navbar on its child pages
+const NavBarLayout = () => (
+  <>
+    <Nav />
+    <Outlet />
+  </>
+);
+
+// ------------------ App ------------------ //
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public route for login without navbar */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Routes with Navbar */}
+          <Route element={<NavBarLayout />}>
+            <Route index element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/characters" element={<Characters />} />
+            <Route path="/about" element={<About />} />
+            {/* Catch-all: show error page or redirect */}
+            <Route path="*" element={<ErrorPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
