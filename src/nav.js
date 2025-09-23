@@ -62,9 +62,16 @@ function Nav() {
                 <>
                   <li className="nav-item">  
                     <span className="navbar-text" style={userGreetingStyles}>
-                      Welcome, {user}
+                      Welcome, {user?.username}
                     </span>
                   </li>
+                  {user?.characterSlug && (
+                    <li className="nav-item">
+                      <NavLink className="nav-link custom-nav-link" to={`/characters/${user.characterSlug}`}>
+                        My Page
+                      </NavLink>
+                    </li>
+                  )}
                   <li className="nav-item">
                     <NavLink className="nav-link custom-nav-link" to="/login" onClick={handleLogout}>
                       Logout

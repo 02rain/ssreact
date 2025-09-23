@@ -14,6 +14,7 @@ import About from "./pages/about";
 import Login from "./pages/login";
 import ErrorPage from "./pages/error";
 import Characters from "./pages/characters";
+import CharacterProfile from "./pages/characterProfile";
 
 // ------------------ Auth Context ------------------ //
 const AuthContext = createContext();
@@ -27,11 +28,11 @@ export const useAuth = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // { username, characterSlug }
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const login = (username) => {
-    setUser(username);
+  const login = (username, characterSlug) => {
+    setUser({ username, characterSlug });
     setIsLoggedIn(true);
   };
 
@@ -69,6 +70,7 @@ function App() {
             <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
             <Route path="/characters" element={<Characters />} />
+            <Route path="/characters/:slug" element={<CharacterProfile />} />
             <Route path="/about" element={<About />} />
             {/* Catch-all: show error page or redirect */}
             <Route path="*" element={<ErrorPage />} />

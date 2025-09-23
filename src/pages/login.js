@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../App";
+import { squadMembers } from "./characters";
 import "../styles/styles.css";
 
 export default function Login() {
-  const { login, isLoggedIn } = useAuth();
+  const { login, isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -12,25 +13,39 @@ export default function Login() {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
 
-  const realUsername = "Admin";
-  const realPassword = "Nigga1234!";
+  const realUsername = "";
+  const realPassword = "";
 
   useEffect(() => {
     setTitle(username ? `Welcome, ${username}` : "Sign in");
   }, [username]);
 
   useEffect(() => {
-    if (isLoggedIn) navigate("/home");
-  }, [isLoggedIn, navigate]);
+    if (isLoggedIn && user?.characterSlug) {
+      navigate(`/characters/${user.characterSlug}`);
+    }
+  }, [isLoggedIn, user, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === realUsername && password === realPassword) {
-      login(username);
-      navigate("/home");
-    } else {
-      setError("Invalid credentials. Try Admin / Nigga1234!");
+    const selected = squadMembers.find((m) => m.username.toLowerCase() === username.toLowerCase());
+
+    if (!selected) {
+      setError("Enter a valid character username.");
+      return;
     }
+
+    const isValid =
+      username.toLowerCase() === selected.username.toLowerCase() &&
+      password === selected.password;
+
+    if (!isValid) {
+      setError("Invalid credentials for that character.");
+      return;
+    }
+
+    login(username, selected.slug);
+    navigate(`/characters/${selected.slug}`);
   };
 
   const resetForm = () => {
@@ -67,6 +82,8 @@ export default function Login() {
                 required
                 maxLength={20}
               />
+
+              {/* character selection removed; login by username/password only */}
 
               {error && (
                 <div style={{ color: "#ff7aa2", marginBottom: "10px" }}>
