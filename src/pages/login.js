@@ -13,9 +13,6 @@ export default function Login() {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
 
-  const realUsername = "";
-  const realPassword = "";
-
   useEffect(() => {
     setTitle(username ? `Welcome, ${username}` : "Sign in");
   }, [username]);
